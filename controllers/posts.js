@@ -18,13 +18,13 @@ export const getPosts = async (req, res) => {
       .limit(LIMIT)
       .skip(startIndex);
 
-    res.json({
+    return res.json({
       data: posts,
       currentPage: Number(page),
       numberOfPages: Math.ceil(total / LIMIT),
     });
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    return res.status(404).json({ message: error.message });
   }
 };
 
@@ -38,9 +38,9 @@ export const getPostsBySearch = async (req, res) => {
       $or: [{ title }, { tags: { $in: tags.split(",") } }],
     });
 
-    res.json({ data: posts });
+    return res.json({ data: posts });
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    return res.status(404).json({ message: error.message });
   }
 };
 
@@ -50,9 +50,9 @@ export const getPostsByCreator = async (req, res) => {
   try {
     const posts = await PostMessage.find({ name });
 
-    res.json({ data: posts });
+    return res.json({ data: posts });
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    return res.status(404).json({ message: error.message });
   }
 };
 
@@ -62,9 +62,9 @@ export const getPost = async (req, res) => {
   try {
     const post = await PostMessage.findById(id);
 
-    res.status(200).json(post);
+    return res.status(200).json(post);
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    return res.status(404).json({ message: error.message });
   }
 };
 
@@ -80,48 +80,39 @@ export const createPost = async (req, res) => {
   try {
     await newPostMessage.save();
 
-    res.status(201).json(newPostMessage);
+    return res.status(201).json(newPostMessage);
   } catch (error) {
-    res.status(409).json({ message: error.message });
+    return res.status(409).json({ message: error.message });
   }
 };
 
 export const updatePost = async (req, res) => {
-  const { id } = req.params;
+  const id = req.verifyparam;
   const { title, message, creator, selectedFile, tags } = req.body;
-
-  if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).send(`No post with id: ${id}`);
 
   const updatedPost = { creator, title, message, tags, selectedFile, _id: id };
 
   await PostMessage.findByIdAndUpdate(id, updatedPost, { new: true });
 
-  res.json(updatedPost);
+  return res.status(201).json(updatedPost);
 };
 
 export const deletePost = async (req, res) => {
-  const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).send(`No post with id: ${id}`);
+  const id = req.verifyparam;
 
   await PostMessage.findByIdAndRemove(id);
 
-  res.json({ message: "Post deleted successfully." });
+  return res.json({ message: "Post deleted successfully." });
 };
 
 export const likePost = async (req, res) => {
-  const { id } = req.params;
-
-  if (!req.userId) {
-    return res.json({ message: "Unauthenticated" });
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).send(`No post with id: ${id}`);
+  const id = req.verifyparam;
 
   const post = await PostMessage.findById(id);
+
+  if (post.creator === req.userId) {
+    return res.status(409).json("you cannot like or dislike your own posts");
+  }
 
   const index = post.likes.findIndex((id) => id === String(req.userId));
 
@@ -135,7 +126,7 @@ export const likePost = async (req, res) => {
     new: true,
   });
 
-  res.status(200).json(updatedPost);
+  return res.status(200).json(updatedPost);
 };
 
 export const commentPost = async (req, res) => {
@@ -150,7 +141,7 @@ export const commentPost = async (req, res) => {
     new: true,
   });
 
-  res.json(updatedPost);
+  return res.json(updatedPost);
 };
 
 export default router;
