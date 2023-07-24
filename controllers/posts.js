@@ -1,7 +1,7 @@
 import express from "express";
-import mongoose from "mongoose";
 
 import PostMessage from "../models/postMessage.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -92,9 +92,13 @@ export const updatePost = async (req, res) => {
 
   const updatedPost = { creator, title, message, tags, selectedFile, _id: id };
 
-  await PostMessage.findByIdAndUpdate(id, updatedPost, { new: true });
+  const newPost = await PostMessage.findByIdAndUpdate(id, updatedPost, {
+    new: true,
+  });
 
-  return res.status(201).json(updatedPost);
+  console.log("newPost", newPost);
+
+  return res.status(201).json(newPost);
 };
 
 export const deletePost = async (req, res) => {
@@ -106,12 +110,20 @@ export const deletePost = async (req, res) => {
 };
 
 export const likePost = async (req, res) => {
-  const id = req.verifyparam;
+  if (!req.userId) {
+    return res.json({ message: "Unauthenticated" });
+  }
+
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).json({ message: `No post with id: ${id}` });
 
   const post = await PostMessage.findById(id);
 
   if (post.creator === req.userId) {
-    return res.status(409).json("you cannot like or dislike your own posts");
+    return res
+      .status(409)
+      .json({ message: "you cannot like or dislike your own posts" });
   }
 
   const index = post.likes.findIndex((id) => id === String(req.userId));

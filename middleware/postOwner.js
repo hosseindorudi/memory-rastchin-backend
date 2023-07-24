@@ -7,17 +7,19 @@ const postOwner = async (req, res, next) => {
   }
 
   const { id } = req.params;
-  console.log("test");
   if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).send(`No post with id: ${id}`);
+    return res.status(404).json({ message: `No post with id: ${id}` });
 
   try {
     const findPost = await PostMessage.findById(id);
 
-    if (!findPost) return res.status(404).json(`No post with id: ${id}`);
+    if (!findPost)
+      return res.status(404).json({ message: `No post with id: ${id}` });
 
     if (findPost.creator !== req.userId)
-      return res.status(401).json(`you can only work on your own posts`);
+      return res
+        .status(401)
+        .json({ message: `you can only work on your own posts` });
 
     req.verifyparam = id;
 
