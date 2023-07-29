@@ -96,8 +96,6 @@ export const updatePost = async (req, res) => {
     new: true,
   });
 
-  console.log("newPost", newPost);
-
   return res.status(201).json(newPost);
 };
 
