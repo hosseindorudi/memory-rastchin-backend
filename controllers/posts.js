@@ -24,7 +24,7 @@ export const getPosts = async (req, res) => {
       numberOfPages: Math.ceil(total / LIMIT),
     });
   } catch (error) {
-    return res.status(404).json({ message: error.message });
+    return res.status(404).json({ message: "SWW" });
   }
 };
 
@@ -40,7 +40,7 @@ export const getPostsBySearch = async (req, res) => {
 
     return res.json({ data: posts });
   } catch (error) {
-    return res.status(404).json({ message: error.message });
+    return res.status(404).json({ message: "SWW" });
   }
 };
 
@@ -52,7 +52,7 @@ export const getPostsByCreator = async (req, res) => {
 
     return res.json({ data: posts });
   } catch (error) {
-    return res.status(404).json({ message: error.message });
+    return res.status(404).json({ message: "SWW" });
   }
 };
 
@@ -64,7 +64,7 @@ export const getPost = async (req, res) => {
 
     return res.status(200).json(post);
   } catch (error) {
-    return res.status(404).json({ message: error.message });
+    return res.status(404).json({ message: "SWW" });
   }
 };
 
@@ -82,7 +82,7 @@ export const createPost = async (req, res) => {
 
     return res.status(201).json(newPostMessage);
   } catch (error) {
-    return res.status(409).json({ message: error.message });
+    return res.status(409).json({ message: "SWW" });
   }
 };
 
@@ -92,66 +92,80 @@ export const updatePost = async (req, res) => {
 
   const updatedPost = { creator, title, message, tags, selectedFile, _id: id };
 
-  const newPost = await PostMessage.findByIdAndUpdate(id, updatedPost, {
-    new: true,
-  });
-
-  return res.status(201).json(newPost);
+  try {
+    const newPost = await PostMessage.findByIdAndUpdate(id, updatedPost, {
+      new: true,
+    });
+    return res.status(201).json(newPost);
+  } catch (error) {
+    return res.status(409).json({ message: "SWW" });
+  }
 };
 
 export const deletePost = async (req, res) => {
   const id = req.verifyparam;
 
-  await PostMessage.findByIdAndRemove(id);
-
-  return res.json({ message: "Post deleted successfully." });
+  try {
+    await PostMessage.findByIdAndRemove(id);
+    return res.json({ message: "deleteSuccess" });
+  } catch (error) {
+    return res.status(409).json({ message: "SWW" });
+  }
 };
 
 export const likePost = async (req, res) => {
   if (!req.userId) {
-    return res.json({ message: "Unauthenticated" });
+    return res.json({ message: "notAuthorize" });
   }
 
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).json({ message: `No post with id: ${id}` });
+    return res.status(404).json({ message: `noPost` });
 
-  const post = await PostMessage.findById(id);
+  try {
+    const post = await PostMessage.findById(id);
 
-  if (post.creator === req.userId) {
-    return res
-      .status(409)
-      .json({ message: "you cannot like or dislike your own posts" });
+    if (post.creator === req.userId) {
+      return res
+        .status(409)
+        .json({ message: "NOwnerLike" });
+    }
+
+    const index = post.likes.findIndex((id) => id === String(req.userId));
+
+    if (index === -1) {
+      post.likes.push(req.userId);
+    } else {
+      post.likes = post.likes.filter((id) => id !== String(req.userId));
+    }
+
+    const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {
+      new: true,
+    });
+
+    return res.status(200).json(updatedPost);
+  } catch (error) {
+    return res.status(409).json({ message: "SWW" });
   }
-
-  const index = post.likes.findIndex((id) => id === String(req.userId));
-
-  if (index === -1) {
-    post.likes.push(req.userId);
-  } else {
-    post.likes = post.likes.filter((id) => id !== String(req.userId));
-  }
-
-  const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {
-    new: true,
-  });
-
-  return res.status(200).json(updatedPost);
 };
 
 export const commentPost = async (req, res) => {
   const { id } = req.params;
   const { value } = req.body;
 
-  const post = await PostMessage.findById(id);
+  try {
+    const post = await PostMessage.findById(id);
 
-  post.comments.push(value);
+    post.comments.push(value);
 
-  const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {
-    new: true,
-  });
+    const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {
+      new: true,
+    });
 
-  return res.json(updatedPost);
+    return res.json(updatedPost);
+  } catch (error) {
+    return res.status(409).json({ message: "SWW" });
+  }
 };
 
 export default router;

@@ -3,29 +3,29 @@ import mongoose from "mongoose";
 
 const postOwner = async (req, res, next) => {
   if (!req.userId) {
-    return res.json({ message: "Unauthenticated" });
+    return res.json({ message: "notAuthorize" });
   }
 
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).json({ message: `No post with id: ${id}` });
+    return res.status(404).json({ message: `noPost` });
 
   try {
     const findPost = await PostMessage.findById(id);
 
     if (!findPost)
-      return res.status(404).json({ message: `No post with id: ${id}` });
+      return res.status(404).json({ message: `noPost` });
 
     if (findPost.creator !== req.userId)
       return res
         .status(401)
-        .json({ message: `you can only work on your own posts` });
+        .json({ message: `postOwner` });
 
     req.verifyparam = id;
 
     next();
   } catch (error) {
-    return res.status(401).json({ message: "you are not autorized" });
+    return res.status(401).json({ message: "notAuthorize" });
   }
 };
 

@@ -21,7 +21,7 @@ const auth = async (req, res, next) => {
 
     next();
   } catch (error) {
-    return res.status(401).json({ message: "you are not autorized" });
+    return res.status(401).json({ message: "notAuthorize" });
   }
 };
 
