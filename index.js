@@ -10,13 +10,24 @@ dotenv.config();
 
 const app = express();
 
+var corsOptions = {
+  origin: [
+    "https://memory-rastchin-frontend.vercel.app/",
+    "http://localhost:3000",
+  ],
+  optionsSuccessStatus: 200, // For legacy browser support
+};
+
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet());
 
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
+app.all("*", function (req, res, next) {
+  let origin = req.headers.origin;
+  if (cors.origin.indexOf(origin) >= 0) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
