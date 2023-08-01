@@ -11,6 +11,7 @@ dotenv.config();
 const app = express();
 
 var corsOptions = {
+  credentials: true,
   origin: ["https://memory-rastchin-frontend.vercel.app/", "*"],
   optionsSuccessStatus: 200, // For legacy browser support
 };
