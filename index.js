@@ -23,23 +23,27 @@ app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors(corsOptions));
 app.use(helmet());
 
-app.all("*", function (req, res, next) {
-  let origin = req.headers.origin;
-  if (cors.origin.indexOf(origin) >= 0) {
-    res.header("Access-Control-Allow-Origin", origin);
-  }
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+// app.all("*", function (req, res, next) {
+//   let origin = req.headers.origin;
+//   if (cors.origin.indexOf(origin) >= 0) {
+//     res.header("Access-Control-Allow-Origin", origin);
+//   }
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
 
 app.use("/posts", postRoutes);
 app.use("/user", userRouter);
 
 const CONNECTION_URL = process.env.MONGO_URL;
 const PORT = process.env.PORT || 5000;
+
+if (!CONNECTION_URL) {
+  process.exit(1);
+}
 
 mongoose
   .connect(CONNECTION_URL)
