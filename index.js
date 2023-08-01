@@ -54,7 +54,7 @@ mongoose
   .connect(CONNECTION_URL)
   .then(() =>
     server.listen(PORT, () => {
-      console.log(`Server is listening on port ${port}`);
+      console.log(`Server is listening on port ${PORT}`);
     })
   )
   .catch((error) => {
