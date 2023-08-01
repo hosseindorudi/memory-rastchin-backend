@@ -5,6 +5,7 @@ import helmet from "helmet";
 import dotenv from "dotenv";
 import postRoutes from "./routes/posts.js";
 import userRouter from "./routes/user.js";
+import http from "http";
 
 dotenv.config();
 
@@ -21,17 +22,17 @@ app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors(corsOptions));
 app.use(helmet());
 
-// app.all("*", function (req, res, next) {
-//   let origin = req.headers.origin;
-//   if (cors.origin.indexOf(origin) >= 0) {
-//     res.header("Access-Control-Allow-Origin", origin);
-//   }
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
+app.all("*", function (req, res, next) {
+  let origin = req.headers.origin;
+  if (cors.origin.indexOf(origin) >= 0) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 app.use("/posts", postRoutes);
 app.use("/user", userRouter);
@@ -47,12 +48,16 @@ if (!CONNECTION_URL) {
   process.exit(1);
 }
 
+const server = http.createServer(app);
+
 mongoose
   .connect(CONNECTION_URL)
-  .then(() => app.listen(PORT, () => console.log(`Server Running`)))
+  .then(() =>
+    server.listen(PORT, () => {
+      console.log(`Server is listening on port ${port}`);
+    })
+  )
   .catch((error) => {
     console.log(`${error} did not connect`);
     process.exit(1);
   });
-
-export default app;
