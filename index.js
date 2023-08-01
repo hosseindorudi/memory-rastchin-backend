@@ -11,9 +11,9 @@ dotenv.config();
 const app = express();
 
 var corsOptions = {
-  credentials: true,
-  origin: ["https://memory-rastchin-frontend.vercel.app/", "*"],
+  origin: ["https://memory-rastchin-frontend.vercel.app/"],
   optionsSuccessStatus: 200, // For legacy browser support
+  credentials: true,
 };
 
 app.use(express.json({ limit: "30mb", extended: true }));
@@ -35,6 +35,10 @@ app.use(helmet());
 
 app.use("/posts", postRoutes);
 app.use("/user", userRouter);
+
+app.get("/", (req, res) => {
+  return res.status(200).json("hello world");
+});
 
 const CONNECTION_URL = process.env.MONGO_URL;
 const PORT = process.env.PORT || 5000;
