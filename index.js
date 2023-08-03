@@ -6,7 +6,6 @@ import dotenv from "dotenv";
 import postRoutes from "./routes/posts.js";
 import userRouter from "./routes/user.js";
 import http from "http";
-import serverless from "serverless-http"
 
 dotenv.config();
 
@@ -63,4 +62,3 @@ mongoose
     process.exit(1);
   });
 
-  module.exports.handler = serverless(app)
