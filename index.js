@@ -6,13 +6,14 @@ import dotenv from "dotenv";
 import postRoutes from "./routes/posts.js";
 import userRouter from "./routes/user.js";
 import http from "http";
+import serverless from "serverless-http"
 
 dotenv.config();
 
 const app = express();
 
 var corsOptions = {
-  origin: ["https://memory-rastchin-frontend.vercel.app/"],
+  origin: ["*"],
   optionsSuccessStatus: 200, // For legacy browser support
   credentials: true,
 };
@@ -61,3 +62,5 @@ mongoose
     console.log(`${error} did not connect`);
     process.exit(1);
   });
+
+  module.exports.handler = serverless(app)
