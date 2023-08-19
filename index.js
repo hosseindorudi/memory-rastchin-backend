@@ -5,7 +5,6 @@ import helmet from "helmet";
 import dotenv from "dotenv";
 import postRoutes from "./routes/posts.js";
 import userRouter from "./routes/user.js";
-import http from "http";
 
 dotenv.config();
 
@@ -48,12 +47,11 @@ if (!CONNECTION_URL) {
   process.exit(1);
 }
 
-const server = http.createServer(app);
 
 mongoose
   .connect(CONNECTION_URL)
   .then(() =>
-    server.listen(PORT, () => {
+    app.listen(PORT, () => {
       console.log(`Server is listening on port ${PORT}`);
     })
   )
