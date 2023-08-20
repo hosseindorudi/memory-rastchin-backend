@@ -26,4 +26,4 @@ const postOwner = async (req, res, next) => {
   }
 };
 
-export default postOwner;
+module.exports = postOwner;

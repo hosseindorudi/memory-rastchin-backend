@@ -1,10 +1,7 @@
-const express = require("express");
 const PostMessage = require("../models/postMessage.js");
 const mongoose = require("mongoose");
 
-const router = express.Router();
-
-export const getPosts = async (req, res) => {
+const getPosts = async (req, res) => {
   const { page } = req.query;
 
   try {
@@ -27,7 +24,7 @@ export const getPosts = async (req, res) => {
   }
 };
 
-export const getPostsBySearch = async (req, res) => {
+const getPostsBySearch = async (req, res) => {
   const { searchQuery, tags } = req.query;
 
   try {
@@ -43,7 +40,7 @@ export const getPostsBySearch = async (req, res) => {
   }
 };
 
-export const getPostsByCreator = async (req, res) => {
+const getPostsByCreator = async (req, res) => {
   const { name } = req.query;
 
   try {
@@ -55,7 +52,7 @@ export const getPostsByCreator = async (req, res) => {
   }
 };
 
-export const getPost = async (req, res) => {
+const getPost = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -67,7 +64,7 @@ export const getPost = async (req, res) => {
   }
 };
 
-export const createPost = async (req, res) => {
+const createPost = async (req, res) => {
   const post = req.body;
 
   const newPostMessage = new PostMessage({
@@ -85,7 +82,7 @@ export const createPost = async (req, res) => {
   }
 };
 
-export const updatePost = async (req, res) => {
+const updatePost = async (req, res) => {
   const id = req.verifyparam;
   const { title, message, creator, selectedFile, tags } = req.body;
 
@@ -101,7 +98,7 @@ export const updatePost = async (req, res) => {
   }
 };
 
-export const deletePost = async (req, res) => {
+const deletePost = async (req, res) => {
   const id = req.verifyparam;
 
   try {
@@ -112,7 +109,7 @@ export const deletePost = async (req, res) => {
   }
 };
 
-export const likePost = async (req, res) => {
+const likePost = async (req, res) => {
   if (!req.userId) {
     return res.json({ message: "notAuthorize" });
   }
@@ -146,7 +143,7 @@ export const likePost = async (req, res) => {
   }
 };
 
-export const commentPost = async (req, res) => {
+const commentPost = async (req, res) => {
   const { id } = req.params;
   const { value } = req.body;
 
@@ -165,4 +162,14 @@ export const commentPost = async (req, res) => {
   }
 };
 
-export default router;
+module.exports = {
+  commentPost,
+  likePost,
+  getPosts,
+  getPostsBySearch,
+  getPostsByCreator,
+  getPost,
+  createPost,
+  deletePost,
+  updatePost,
+};

@@ -28,4 +28,4 @@ router.delete("/:id", auth, postOwner, deletePost);
 router.patch("/:id/likePost", auth, likePost);
 router.post("/:id/commentPost", commentPost);
 
-export default router;
+module.exports = router;
