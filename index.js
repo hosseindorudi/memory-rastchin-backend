@@ -9,15 +9,15 @@ const userRouter = require("./routes/user.js");
 
 const app = express();
 
-// var corsOptions = {
-//   origin: ["*"],
-//   optionsSuccessStatus: 200, // For legacy browser support
-//   credentials: true,
-// };
+var corsOptions = {
+  origin: ["http://localhost:3000"],
+  optionsSuccessStatus: 200, // For legacy browser support
+  credentials: true,
+};
 
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet());
 
 // app.all("*", function (req, res, next) {
