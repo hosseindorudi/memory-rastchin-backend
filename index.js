@@ -53,7 +53,7 @@ mongoose
   )
   .then(() =>
     app.listen(3000, () => {
-      console.log(`Server is listening on port ${PORT}`);
+      console.log(`Server is running`);
     })
   )
   .catch((error) => {
