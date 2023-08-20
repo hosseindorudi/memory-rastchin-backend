@@ -4,20 +4,18 @@ import dotenv from "dotenv";
 import UserModal from "../models/user.js";
 dotenv.config();
 
-const secret = process.env.JWT_SECRET;
+const secret = "test";
 
 export const signin = async (req, res) => {
   const { email, password } = req.body;
   try {
     const oldUser = await UserModal.findOne({ email });
 
-    if (!oldUser)
-      return res.status(404).json({ message: "noUserExist" });
+    if (!oldUser) return res.status(404).json({ message: "noUserExist" });
 
     const isPasswordCorrect = await bcrypt.compare(password, oldUser.password);
 
-    if (!isPasswordCorrect)
-      return res.status(400).json({ message: "in_cre" });
+    if (!isPasswordCorrect) return res.status(400).json({ message: "in_cre" });
 
     const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
       expiresIn: "1h",
@@ -35,8 +33,7 @@ export const signup = async (req, res) => {
   try {
     const oldUser = await UserModal.findOne({ email });
 
-    if (oldUser)
-      return res.status(400).json({ message: "userExist" });
+    if (oldUser) return res.status(400).json({ message: "userExist" });
 
     const hashedPassword = await bcrypt.hash(password, 12);
 

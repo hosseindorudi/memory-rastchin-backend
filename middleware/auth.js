@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const auth = async (req, res, next) => {
-  const secret = process.env.JWT_SECRET;
+  const secret = "test";
 
   if (!secret) {
     return res.status(401).json({ message: "notAuthorize" });
