@@ -1,10 +1,9 @@
-import express from "express";
-import mongoose from "mongoose";
-import cors from "cors";
-import helmet from "helmet";
-// import dotenv from "dotenv";
-import postRoutes from "./routes/posts.js";
-import userRouter from "./routes/user.js";
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const helmet = require("helmet");
+const postRoutes = require("./routes/posts.js");
+const userRouter = require("./routes/user.js");
 
 // dotenv.config();
 

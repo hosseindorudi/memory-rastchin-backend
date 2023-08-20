@@ -1,6 +1,9 @@
-import express from "express";
+const express = require("express");
 
-import {
+const auth = require("../middleware/auth.js");
+const postOwner = require("../middleware/postOwner.js");
+
+const {
   getPosts,
   getPostsBySearch,
   getPostsByCreator,
@@ -10,11 +13,9 @@ import {
   likePost,
   commentPost,
   deletePost,
-} from "../controllers/posts.js";
+} = require("../controllers/posts.js");
 
 const router = express.Router();
-import auth from "../middleware/auth.js";
-import postOwner from "../middleware/postowner.js";
 
 router.get("/creator", getPostsByCreator);
 router.get("/search", getPostsBySearch);

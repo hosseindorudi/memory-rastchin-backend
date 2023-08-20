@@ -1,7 +1,6 @@
-import express from "express";
-
-import PostMessage from "../models/postMessage.js";
-import mongoose from "mongoose";
+const express = require("express");
+const PostMessage = require("../models/postMessage.js");
+const mongoose = require("mongoose");
 
 const router = express.Router();
 
@@ -126,9 +125,7 @@ export const likePost = async (req, res) => {
     const post = await PostMessage.findById(id);
 
     if (post.creator === req.userId) {
-      return res
-        .status(409)
-        .json({ message: "NOwnerLike" });
+      return res.status(409).json({ message: "NOwnerLike" });
     }
 
     const index = post.likes.findIndex((id) => id === String(req.userId));

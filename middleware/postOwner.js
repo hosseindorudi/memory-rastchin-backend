@@ -1,5 +1,5 @@
-import PostMessage from "../models/postMessage.js";
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
+const PostMessage = require("../models/postMessage.js");
 
 const postOwner = async (req, res, next) => {
   if (!req.userId) {
@@ -13,13 +13,10 @@ const postOwner = async (req, res, next) => {
   try {
     const findPost = await PostMessage.findById(id);
 
-    if (!findPost)
-      return res.status(404).json({ message: `noPost` });
+    if (!findPost) return res.status(404).json({ message: `noPost` });
 
     if (findPost.creator !== req.userId)
-      return res
-        .status(401)
-        .json({ message: `postOwner` });
+      return res.status(401).json({ message: `postOwner` });
 
     req.verifyparam = id;
 
