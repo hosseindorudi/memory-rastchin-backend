@@ -36,7 +36,7 @@ app.use("/posts", postRoutes);
 app.use("/user", userRouter);
 
 app.get("/", (req, res) => {
-  return res.status(200).send("hello world");
+  res.status(200).send("hello world");
 });
 
 // const CONNECTION_URL = process.env.MONGO_URL;
