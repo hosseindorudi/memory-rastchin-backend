@@ -10,7 +10,7 @@ const userRouter = require("./routes/user.js");
 const app = express();
 
 var corsOptions = {
-  origin: ["http://localhost:3000"],
+  origin: ["https://hd-memories.netlify.app"],
   optionsSuccessStatus: 200, // For legacy browser support
   credentials: true,
 };
