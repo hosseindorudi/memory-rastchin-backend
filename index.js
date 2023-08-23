@@ -21,10 +21,10 @@ var corsOptions = {
 };
 
 app.all("*", function (req, res, next) {
-  // let origin = req.headers.origin;
-  // if (cors.origin.indexOf(origin) >= 0) {
-  res.header("Access-Control-Allow-Origin", "*");
-  // }
+  let origin = req.headers.origin;
+  if (cors.origin.indexOf(origin) >= 0) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
   res.header("Access-Control-Allow-Headers", "*");
   next();
 });
