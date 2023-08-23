@@ -10,7 +10,12 @@ const userRouter = require("./routes/user.js");
 const app = express();
 
 var corsOptions = {
-  origin: "*",
+  origin: [
+    "http://localhost:3000",
+    "https://hd-memories.netlify.app/",
+    "https://hd-memories.netlify.app/posts",
+    "https://hd-memories.netlify.app/*",
+  ],
   optionsSuccessStatus: 200, // For legacy browser support
   credentials: true,
 };
@@ -24,7 +29,7 @@ var corsOptions = {
 //   next();
 // });
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(helmet());
