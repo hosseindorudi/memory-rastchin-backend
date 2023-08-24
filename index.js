@@ -10,29 +10,30 @@ const userRouter = require("./routes/user.js");
 const app = express();
 
 var corsOptions = {
-  origin: ["http://localhost:3000", "https://hd-memories.netlify.app/", "https://hd-memories.netlify.app/*", "https://hd-memories.netlify.app"],
+  origin: [
+    "https://hd-memories.netlify.app",
+    "http://localhost:3000",
+    "https://hd-memories.netlify.app/",
+    "https://hd-memories.netlify.app/posts",
+    "https://hd-memories.netlify.app/*"
+  ],
   optionsSuccessStatus: 200, // For legacy browser support
   credentials: true,
 };
 
+// app.all("*", function (req, res, next) {
+//   let origin = req.headers.origin;
+//   if (cors?.origin?.indexOf(origin) >= 0) {
+//     res.header("Access-Control-Allow-Origin", origin);
+//   }
+//   res.header("Access-Control-Allow-Headers", "*");
+//   next();
+// });
 
-app.all("*", function (req, res, next) {
-  let origin = req.headers.origin;
-  if (cors.origin.indexOf(origin) >= 0) {
-    res.header("Access-Control-Allow-Origin", origin);
-  }
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
-
+app.use(cors(corsOptions));
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
-app.use(cors(corsOptions));
 app.use(helmet());
-
 
 app.use("/posts", postRoutes);
 app.use("/user", userRouter);
